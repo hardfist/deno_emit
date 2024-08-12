@@ -9,6 +9,7 @@ use deno_ast::swc;
 use deno_ast::swc::atoms::JsWord;
 use deno_ast::swc::common::comments::SingleThreadedComments;
 use deno_ast::swc::common::Mark;
+use deno_ast::swc::common::sync::Lrc;
 use deno_ast::swc::parser::lexer::Lexer;
 use deno_ast::swc::parser::StringInput;
 use deno_ast::EmitOptions;
@@ -21,7 +22,6 @@ use deno_ast::SourceTextInfo;
 use deno_ast::TranspileOptions;
 use deno_graph::Module;
 use std::collections::HashMap;
-use std::rc::Rc;
 
 use crate::bundle_hook::BundleHook;
 use crate::text::strip_bom;
@@ -282,7 +282,7 @@ fn transpile_module(
   media_type: MediaType,
   options: &deno_ast::TranspileOptions,
   cm: &SourceMap,
-) -> Result<(Rc<swc::common::SourceFile>, swc::ast::Module)> {
+) -> Result<(Lrc<swc::common::SourceFile>, swc::ast::Module)> {
   let source = strip_bom(source);
   let source = if media_type == MediaType::Json {
     transform_json_source(source)
